@@ -1,31 +1,29 @@
-import Head from 'next/head'
-import { styled } from '../styles'
+import Image from 'next/future/image'
 
-const Button = styled('button', {
-  backgroundColor: '$green500',
-  borderRadius: 4,
-  color: '#fff',
-  padding: '8px 16px',
-  border: 'none',
-  cursor: 'pointer',
+import tShirt1 from '../assets/t-shirt-1.png'
+import tShirt2 from '../assets/t-shirt-2.png'
 
-  '&:hover': {
-    filter: 'brightness(0.8)',
-    transition: '0.5s',
-  },
-})
+import { HomeContainer, Product } from '../styles/pages/home'
 
 export default function Home() {
   return (
-    <div>
-      <Head>
-        <meta name="description" content="Ignite Shop by Rocketseat" />
-        <link rel="icon" href="/favicon.ico" />
-        <title>Ignite Shop</title>
-      </Head>
+    <HomeContainer>
+      <Product>
+        <Image src={tShirt1} width={520} height={480} alt="" />
 
-      <h1>Hello Next.js</h1>
-      <Button>Teste</Button>
-    </div>
+        <footer>
+          <strong>Camiseta X</strong>
+          <span>R$ 79,90</span>
+        </footer>
+      </Product>
+      <Product>
+        <Image src={tShirt2} width={520} height={480} alt="" />
+
+        <footer>
+          <strong>Camiseta Y</strong>
+          <span>R$ 79,90</span>
+        </footer>
+      </Product>
+    </HomeContainer>
   )
 }

@@ -1,4 +1,5 @@
 import { Head, Html, Main, NextScript } from 'next/document'
+
 import { getCssText } from '../styles'
 
 export default function Document() {
@@ -20,7 +21,9 @@ export default function Document() {
           id="stitches"
           dangerouslySetInnerHTML={{ __html: getCssText() }}
         />
+        <meta name="description" content="Ignite Shop by Rocketseat" />
       </Head>
+
       <body>
         <Main />
         <NextScript />
