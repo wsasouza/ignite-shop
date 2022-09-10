@@ -1,5 +1,6 @@
-import { GetStaticProps } from 'next'
 import Image from 'next/future/image'
+import Link from 'next/link'
+import { GetStaticProps } from 'next'
 import Stripe from 'stripe'
 
 import { stripe } from '../lib/stripe'
@@ -8,7 +9,6 @@ import { priceFormatter } from '../utils/formatter'
 
 import 'keen-slider/keen-slider.min.css'
 import { HomeContainer, Product } from '../styles/pages/home'
-import Link from 'next/link'
 
 interface HomeProps {
   products: {
