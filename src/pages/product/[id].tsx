@@ -1,6 +1,7 @@
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Image from 'next/future/image'
 import Stripe from 'stripe'
+import axios from 'axios'
 
 import { stripe } from '../../lib/stripe'
 import { priceFormatter } from '../../utils/formatter'
@@ -11,6 +12,7 @@ import {
   ProductDetails,
 } from '../../styles/pages/product'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 interface ProductProps {
   product: {
@@ -19,14 +21,36 @@ interface ProductProps {
     description: string
     imageUrl: string
     price: number
+    defaultPriceId: string
   }
 }
 
 export default function Product({ product }: ProductProps) {
+  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
+    useState(false)
+
   const { isFallback } = useRouter()
 
   if (isFallback) {
     return <p>Loading...</p>
+  }
+
+  async function handleBuyProduct() {
+    try {
+      setIsCreatingCheckoutSession(true)
+      const response = await axios.post('/api/checkout', {
+        priceId: product.defaultPriceId,
+      })
+
+      const { checkoutUrl } = response.data
+
+      window.location.href = checkoutUrl
+    } catch (err) {
+      // conectar com uma ferramenta de observabilidade como sentry ou datadog
+      alert('Falha ao direcionar ao checkout')
+
+      setIsCreatingCheckoutSession(false)
+    }
   }
 
   return (
@@ -44,7 +68,9 @@ export default function Product({ product }: ProductProps) {
         <h1>{product.name}</h1>
         <span>{priceFormatter.format(product.price)}</span>
         <p>{product.description}</p>
-        <button>Comprar agora</button>
+        <button disabled={isCreatingCheckoutSession} onClick={handleBuyProduct}>
+          Comprar agora
+        </button>
       </ProductDetails>
     </ProductContainer>
   )
@@ -76,6 +102,7 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
         description: product.description,
         imageUrl: product.images[0],
         price: price.unit_amount! / 100,
+        defaultPriceId: price.id,
       },
     },
     revalidate: 60 * 60 * 1, // 1 hour
